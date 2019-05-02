@@ -22,19 +22,31 @@ SPECULAR_EXP = 4
 
 #lighting functions
 def get_lighting(normal, view, ambient, light, areflect, dreflect, sreflect ):
-    return calculate_ambient(ambient,areflect)+
+    return [255,0,0]
+    return [calculate_ambient(ambient,areflect)[0]+calculate_diffuse(light, dreflect, normal)[0]+calculate_specular(light, sreflect, view, normal)[0],
+            calculate_ambient(ambient,areflect)[1]+calculate_diffuse(light, dreflect, normal)[1]+calculate_specular(light, sreflect, view, normal)[1],
+            calculate_ambient(ambient,areflect)[2]+calculate_diffuse(light, dreflect, normal)[2]+calculate_specular(light, sreflect, view, normal)[2]]
 
 def calculate_ambient(alight, areflect):
-    return [alight[0] * areflect,alight[1]*areflect,alight[2]*areflect]
+    return shorten(alight,areflect)
 
 def calculate_diffuse(light, dreflect, normal):
-    return [] 
+    return shorten(light[1],shorten2(dreflect,dot_product(normal,light[0])))
 
 def calculate_specular(light, sreflect, view, normal):
-    pass
+    twice=[2,2,2]
+    return shorten(light[1],shorten2(sreflect,math.pow(dot_product(subtract(shorten(twice,shorten2(normal,dot_product(light[0],normal))),light[0]),view),SPECULAR_EXP)))
 
 def limit_color(color):
     return [color[0]/max(color),color[1]/max(color),color[2]/max(color)]
+
+def shorten(a,b):
+    return [a[0] * b[0],a[1] * b[1], a[2] * b[2]]
+def shorten2(a,b):
+    return [a[0] * b,a[1] * b, a[2] * b]
+
+def subtract(a,b):
+    return [a[0] - b[0],a[1] - b[1], a[2] - b[2]]
 
 #vector functions
 #normalize vetor, should modify the parameter
