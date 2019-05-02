@@ -1,3 +1,4 @@
+
 import math
 from display import *
 
@@ -22,11 +23,18 @@ SPECULAR_EXP = 4
 
 #lighting functions
 def get_lighting(normal, view, ambient, light, areflect, dreflect, sreflect ):
-    return [255,0,0]
-    return [calculate_ambient(ambient,areflect)[0]+calculate_diffuse(light, dreflect, normal)[0]+calculate_specular(light, sreflect, view, normal)[0],
-            calculate_ambient(ambient,areflect)[1]+calculate_diffuse(light, dreflect, normal)[1]+calculate_specular(light, sreflect, view, normal)[1],
-            calculate_ambient(ambient,areflect)[2]+calculate_diffuse(light, dreflect, normal)[2]+calculate_specular(light, sreflect, view, normal)[2]]
-
+    print(normal)
+    print(calculate_diffuse(light,dreflect,normal)[0])
+    return [int(calculate_diffuse(light, dreflect, normal)[0]),
+            int(calculate_diffuse(light, dreflect, normal)[1]),
+            int(calculate_diffuse(light, dreflect, normal)[2])]
+##    return limit_color([int(calculate_diffuse(light, dreflect, normal)[0]),
+##            int(calculate_diffuse(light, dreflect, normal)[1]),
+##            int(calculate_diffuse(light, dreflect, normal)[2])]
+##    )
+    return limit_color([int(calculate_ambient(ambient,areflect)[0]+calculate_diffuse(light, dreflect, normal)[0]+calculate_specular(light, sreflect, view, normal)[0]),
+            int(calculate_ambient(ambient,areflect)[1]+calculate_diffuse(light, dreflect, normal)[1]+calculate_specular(light, sreflect, view, normal)[1]),
+            int(calculate_ambient(ambient,areflect)[2]+calculate_diffuse(light, dreflect, normal)[2]+calculate_specular(light, sreflect, view, normal)[2])])
 def calculate_ambient(alight, areflect):
     return shorten(alight,areflect)
 
@@ -38,7 +46,13 @@ def calculate_specular(light, sreflect, view, normal):
     return shorten(light[1],shorten2(sreflect,math.pow(dot_product(subtract(shorten(twice,shorten2(normal,dot_product(light[0],normal))),light[0]),view),SPECULAR_EXP)))
 
 def limit_color(color):
-    return [color[0]/max(color),color[1]/max(color),color[2]/max(color)]
+    x=color
+    for i in range(len(x)):
+        if i>255:
+            x[i]=255
+        if i<0:
+            x[i]=0
+    return [x[0],x[1],x[2]]
 
 def shorten(a,b):
     return [a[0] * b[0],a[1] * b[1], a[2] * b[2]]
