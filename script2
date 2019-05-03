@@ -1,0 +1,23 @@
+push
+move
+250 150 0
+rotate
+x 45
+rotate
+y 45
+box
+25 100 -25 50 -225 50
+pop
+push
+move
+50 300 0
+rotate
+x 45
+rotate
+y 45
+box
+200 -50 -25 200 50 50
+pop
+display
+save
+robot.png

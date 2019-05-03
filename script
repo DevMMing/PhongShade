@@ -1,26 +1,70 @@
-#BODY
+#Sphere
+push
+move
+250 150 0
+sphere
+0 0 0 100
+pop
+#Ring 1
 push
 move
 250 150 0
 rotate
-y -30
-sphere
-0 0 0 150
+x 45
+rotate
+y 45
+torus
+0 0 0 20 100
 pop
+#Ring 2
 push
 move
 250 150 0
+rotate
+x 45
+rotate
+y 45
+rotate
+x 90
 torus
-0 0 0 10 150
-scale
-20 0 20
+0 0 0 20 100
 pop
-#HEAD
+#Ring 3
 push
 move
-0 250 0
+250 150 0
+rotate
+x 45
+rotate
+y 45
+rotate
+x 90
+rotate
+z 90
+torus
+0 0 0 20 100
+pop
+#Cross-> Fix
+push
+move
+250 150 0
+rotate
+x -45
+rotate
+y 45
 box
--25 0 -50 50 200 100
+25 100 -25 50 -225 50
+pop
+push
+move
+50 300 0
+rotate
+x 45
+rotate
+y 45
+box
+200 -50 -25 200 50 50
+pop
 display
 save
 robot.png
