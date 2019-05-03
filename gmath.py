@@ -23,15 +23,9 @@ SPECULAR_EXP = 4
 
 #lighting functions
 def get_lighting(normal, view, ambient, light, areflect, dreflect, sreflect ):
-    print(normal)
-    print(calculate_diffuse(light,dreflect,normal)[0])
-    return [int(calculate_diffuse(light, dreflect, normal)[0]),
-            int(calculate_diffuse(light, dreflect, normal)[1]),
-            int(calculate_diffuse(light, dreflect, normal)[2])]
-##    return limit_color([int(calculate_diffuse(light, dreflect, normal)[0]),
-##            int(calculate_diffuse(light, dreflect, normal)[1]),
-##            int(calculate_diffuse(light, dreflect, normal)[2])]
-##    )
+    normalize(normal)
+    normalize(view)
+    normalize(light[LOCATION])
     return limit_color([int(calculate_ambient(ambient,areflect)[0]+calculate_diffuse(light, dreflect, normal)[0]+calculate_specular(light, sreflect, view, normal)[0]),
             int(calculate_ambient(ambient,areflect)[1]+calculate_diffuse(light, dreflect, normal)[1]+calculate_specular(light, sreflect, view, normal)[1]),
             int(calculate_ambient(ambient,areflect)[2]+calculate_diffuse(light, dreflect, normal)[2]+calculate_specular(light, sreflect, view, normal)[2])])
@@ -39,20 +33,14 @@ def calculate_ambient(alight, areflect):
     return shorten(alight,areflect)
 
 def calculate_diffuse(light, dreflect, normal):
-    return shorten(light[1],shorten2(dreflect,dot_product(normal,light[0])))
+    return shorten(light[COLOR],shorten2(dreflect,dot_product(normal,light[LOCATION])))
 
 def calculate_specular(light, sreflect, view, normal):
     twice=[2,2,2]
-    return shorten(light[1],shorten2(sreflect,math.pow(dot_product(subtract(shorten(twice,shorten2(normal,dot_product(light[0],normal))),light[0]),view),SPECULAR_EXP)))
+    return shorten(light[COLOR],shorten2(sreflect,math.pow(dot_product(subtract(shorten(twice,shorten2(normal,dot_product(light[0],normal))),light[LOCATION]),view),SPECULAR_EXP)))
 
 def limit_color(color):
-    x=color
-    for i in range(len(x)):
-        if i>255:
-            x[i]=255
-        if i<0:
-            x[i]=0
-    return [x[0],x[1],x[2]]
+    return [0 if i<0 else 255 if i>255 else i for i in color]
 
 def shorten(a,b):
     return [a[0] * b[0],a[1] * b[1], a[2] * b[2]]
